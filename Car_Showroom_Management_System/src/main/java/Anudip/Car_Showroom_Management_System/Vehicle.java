@@ -7,16 +7,28 @@ import javax.persistence.Id;
 public class Vehicle {
 	
 	private String V_Brand;
-	private String V_Name;
+	private String V_Model;
 	@Id
 	private int V_Number;
 	private double V_Price;
+	private int V_stock;
 	
 	
+
+
+	@Override
+	public String toString() {
+		return "Vehicle [V_Brand=" + V_Brand + ", V_Model=" + V_Model + ", V_Number=" + V_Number + ", V_Price="
+				+ V_Price + ", V_stock=" + V_stock + "]";
+	}
+
+
+
 
 	public String getV_Brand() {
 		return V_Brand;
 	}
+
 
 
 
@@ -26,15 +38,18 @@ public class Vehicle {
 
 
 
-	public String getV_Name() {
-		return V_Name;
+
+	public String getV_Model() {
+		return V_Model;
 	}
 
 
 
-	public void setV_Name(String v_Name) {
-		V_Name = v_Name;
+
+	public void setV_Model(String v_Model) {
+		V_Model = v_Model;
 	}
+
 
 
 
@@ -44,9 +59,11 @@ public class Vehicle {
 
 
 
+
 	public void setV_Number(int v_Number) {
 		V_Number = v_Number;
 	}
+
 
 
 
@@ -56,9 +73,25 @@ public class Vehicle {
 
 
 
+
 	public void setV_Price(double v_Price) {
 		V_Price = v_Price;
 	}
+
+
+
+
+	public int getV_stock() {
+		return V_stock;
+	}
+
+
+
+
+	public void setV_stock(int v_stock) {
+		V_stock = v_stock;
+	}
+
 
 
 
