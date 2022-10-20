@@ -41,4 +41,5 @@ public class User {
 		return "user [userName=" + userName + ", userId=" + userId + ", email=" + email + ", phoneNo=" + phoneNo
 				+ ", homeAdd=" + homeAdd + "]";
 	}
+	//changed by nikhil
 }

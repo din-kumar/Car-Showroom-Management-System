@@ -30,6 +30,7 @@ public class VehicleEntity {
 	public int getVehicleId() {
 		return vehicleId;
 	}
+	//comment by nikhil
 	public void setVehicleId(int vehicleId) {
 		this.vehicleId = vehicleId;
 	}
