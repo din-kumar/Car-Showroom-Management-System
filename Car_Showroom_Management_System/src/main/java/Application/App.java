@@ -1,5 +1,7 @@
 package Application;
 
+import java.util.Scanner;
+
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
@@ -11,7 +13,11 @@ public class App
 {
     public static void main( String[] args )
     {
-        
+//------------------------------------ User Platform -----------------------------------------------------------
+    	
+    	Layout layout = new Layout();
+    	
+//--------------------------------------------------------------------------------------------------------------
         
         Configuration con = new Configuration().configure().addAnnotatedClass(VehicleEntity.class).addAnnotatedClass(UserEntity.class);
         ServiceRegistry reg = new ServiceRegistryBuilder().applySettings(con.getProperties()).buildServiceRegistry(); 
