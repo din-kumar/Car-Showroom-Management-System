@@ -108,12 +108,35 @@ public class UserFunction {
 	public void home(UserEntity U)
 	{
 		clrscr();
+		VehicleFunction V = new VehicleFunction();
 		System.out.println("Hello "+U.getUserName());
+		int k=-1;
+		while(k!=0) {
+			clrscr();
+			System.out.println("Input your option \n1.View Available Vehicle\0.Exit");
+			k=sc.nextInt();
+			switch(k) {
+			case 1:V.vehicleview();
+			default: System.out.println("Wrong Input Try again");break;
+			}
+	}
 	}
 	
 	public void adminhome()
 	{
 		clrscr();
+		VehicleFunction V = new VehicleFunction();
 		System.out.println("Hello Admin");
+		int k=-1;
+		while(k!=0) {
+			clrscr();
+			System.out.println("Input your option \n1.Add Vehicle\n2.Modify Vehicle\n0.Exit");
+			k=sc.nextInt();
+			switch(k) {
+			case 1:V.vehicleadd();
+			default: System.out.println("Wrong Input Try again");break;
+			}
+		
 	}
+}
 }
