@@ -1,5 +1,4 @@
 package Application;
-
 import java.awt.Button;
 import java.awt.Choice;
 import java.awt.Frame;
@@ -37,7 +36,7 @@ public class Layout {
 		Label select = new Label("Select User Type - ");
 		select.setBounds(20, 90, 100, 30);
 
-		Choice user_type = new Choice();
+		final Choice user_type = new Choice();
 		user_type.add("New User");
 		user_type.add("Registered User");
 		user_type.add("Admin");
@@ -58,7 +57,6 @@ public class Layout {
 
 		ok.addActionListener(new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				Display_Window2(user_type);
@@ -77,7 +75,7 @@ public class Layout {
 		Button submit = new Button("Submit");
 		Button back = new Button("Back");
 
-		int index = user_type.getSelectedIndex();
+		final int index = user_type.getSelectedIndex();
 		if (index == 0) {
 			welcome = new Label("Welcome New User");
 			New_User();
@@ -102,27 +100,28 @@ public class Layout {
 //************************** Button function *************************************
 		submit.addActionListener(new ActionListener() {
 			
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(index == 0) {
 					// add data to the database(not done)
 					// go to regisered user page
-					frame.removeAll();
-					Label thank = new Label("Your Response Submitted Successfuly");
-					thank.setBounds(20, 40,	250, 30);
-					back.setBounds(140, 160, 80, 30);
+					Submit_NewUser();				
+					}
+				else if(index ==1) {
+					// check user id and password(not done)
+					// go to user page
+					User_Profile(/*have parameters user id and password*/ );
 					
-					
-					frame.add(thank);
-					frame.add(back);
-					frame.setSize(500,300);
+				}
+				else {
+					// check user id and password(not done)
+					// go to admin profile
+					Admin_Profile(/*have parameters user id and password */);
 				}
 			}
 		});
 		
 		back.addActionListener(new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.removeAll();
 				Display_Window1();
@@ -212,6 +211,30 @@ public class Layout {
 		
 	}
 
+// ----------------------------Submit New User -------------------------------
+	public void Submit_NewUser() {
+		
+		frame.removeAll();
+		Label thank = new Label("Your Response Submitted Successfuly");
+		thank.setBounds(20, 40,	250, 30);
+		
+		Button back = new Button("Back");
+		back.setBounds(140, 160, 80, 30);
+		
+		
+		frame.add(thank);
+		frame.add(back);
+		frame.setSize(500,300);
+		
+		back.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				frame.removeAll();
+				Display_Window1();
+			}
+		});
+		
+	}
 // ----------------------- Third Part 2 Window -----------------------------------
 
 
@@ -229,6 +252,7 @@ public class Layout {
 		TextField i_pass = new TextField();
 		i_pass.setBounds(160, 120, 200, 30);
 		
+		
 // ************************ Add Items ***************************	
 		frame.add(u_id);
 		frame.add(pass);
@@ -238,35 +262,35 @@ public class Layout {
 	}
 
 // ----------------------- User Profile -----------------------------------
-		public void User_Profile(){
+	public void User_Profile(){
 		frame.removeAll();
-			
+		
 		Label welcome = new Label("Welcome");
 		welcome.setBounds(100, 40, 100, 30);
-			
+		
 		Label u_id = new Label("User Id ");
 		u_id.setBounds(20,80,100,30);
-			
+		
 		Label name = new Label("Name ");
 		name.setBounds(20,120,100,30);
-			
+		
 		Label mobile = new Label("Mobile no. ");
 		mobile.setBounds(20,160,100,30);
-			
+		
 // $$$$$$$$$$$$$$$$$$$$$$$ Fetch from data base $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$		
 		Label op_u_id = new Label(/*fetch from database */);
 		op_u_id.setBounds(140, 80, 100, 30);
-			
+		
 		Label op_name = new Label();
 		op_name.setBounds(140,120,100,30);
-			
+		
 		Label op_mobile = new Label();
 		op_mobile.setBounds(140,160,100,30);
 		// also describe other entities to add
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$		
-			
+		
 		Logout();
-			
+		
 		frame.add(welcome);
 		frame.add(u_id);
 		frame.add(name);
@@ -274,40 +298,40 @@ public class Layout {
 		frame.add(op_u_id);
 		frame.add(op_name);
 		frame.add(op_mobile);
-			
+		
 		frame.setSize(300,400);
 		
-}
+	}
 // ----------------------- Admin Profile -----------------------------------
 	public void Admin_Profile(){
 		frame.removeAll();
-			
+		
 		Label welcome = new Label("Welcome");
 		welcome.setBounds(80, 40, 100, 30);
-			
+		
 		Label u_id = new Label("User Id ");
 		u_id.setBounds(20,80,100,30);
-			
+		
 		Label name = new Label("Name ");
 		name.setBounds(20,120,100,30);
-			
+		
 		Label mobile = new Label("Mobile no. ");
 		mobile.setBounds(20,160,100,30);
 		
 // $$$$$$$$$$$$$$$$$$$$$$$ Fetch from data base $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$		
 		Label op_u_id = new Label(/*fetch from database */);
 		op_u_id.setBounds(140, 80, 100, 30);
-			
+		
 		Label op_name = new Label();
 		op_name.setBounds(140,120,100,30);
-			
+		
 		Label op_mobile = new Label();
 		op_mobile.setBounds(140,160,100,30);
-			
+		
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$		
-			
+		
 		Logout();
-			
+		
 		frame.add(welcome);
 		frame.add(u_id);
 		frame.add(name);
@@ -317,24 +341,27 @@ public class Layout {
 		frame.add(op_mobile);
 		
 		frame.setSize(300,400);
-}
+	}
 // ------------------------------ Log out -------------------------------------
 	public void Logout(){
 		Button logout = new Button("Log Out");
 		logout.setBounds(120,350,100,30);
 		logout.addActionListener(new ActionListener() {
 			
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.removeAll();
 				Display_Window1();
-					
-				}
+				
+			}
 		});
-			
+		
 		frame.add(logout);
-			
-			
+		
+		
 	}
-
+// ---------------------------- main method -----------------------	
+//	public static void main(String[] args) {
+//
+//		Layout first = new Layout();
+//	}
 }
