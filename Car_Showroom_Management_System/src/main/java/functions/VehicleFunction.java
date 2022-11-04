@@ -2,6 +2,7 @@ package functions;
 
 import java.util.Scanner;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -22,40 +23,40 @@ public class VehicleFunction {
     Session session = sf.openSession();
     Transaction transaction = session.beginTransaction();
 	
-	public void vehicleadd() {
-
-
-//		clrscr();
-//        UserEntity U = new UserEntity();
-//        double temp3;
-//       String temp,temp2;
-//        System.out.print("Input your username : ");
-//        temp = sc.next();
-//        U.setUserName(temp);
-//        System.out.print("Input your email : ");
-//        temp = sc.next();
-//        U.setEmail(temp);
-//        System.out.print("Input your phone Number : ");
-//        temp3 = sc.nextDouble();
-//        U.setPhoneNo(temp3);
-//        System.out.print("Input your Address : ");
-//        temp = sc.next();
-//        U.setHomeAdd(temp);
-//        System.out.print("Input your password : ");
-//        temp = sc.next();
-//        System.out.print("Repeat your password : ");
-//        temp2 = sc.next();
-//        if(temp.equals(temp2))
-//        {
-//        	U.setPassword(temp2);
-//        	session.save(U);
-//            transaction.commit();
-//        }
-//        else
-//        {
-//        	System.out.println("Password Do not match");
-//        	register();
-//        }
+    public void clrscr() {
+    	System.out.println("-----------------------------------------------");
+    }
+    
+    public void vehicleadd() {
+    	
+		clrscr();
+		VehicleEntity V = new VehicleEntity();
+		double temp;
+		String temp2;
+		int temp3;
+		
+		System.out.print("Input Vehicle Brand : ");
+		temp2 = sc.nextLine();
+		V.setBrand(temp2);
+		
+		System.out.print("Input Vehicle Model : ");
+		temp2 = sc.nextLine();
+		V.setModel(temp2);
+		
+		System.out.print("Input Vehicle Price : ");
+		temp = sc.nextDouble();
+		V.setVehiclePrice(temp);
+		
+		System.out.print("Input Vehicle Stock : ");
+		temp3 = sc.nextInt();
+		sc.nextLine();
+		V.setVehicleStock(temp3);
+		
+		//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+		// Check here for the data that were Already stored in the database
+		session.save(V);
+		transaction.commit();
+		
 		System.out.println("add another vehicle ? \n1. Yes \n2.No");
 		int op;
 		op=sc.nextInt();
@@ -68,7 +69,18 @@ public class VehicleFunction {
 	}
 
 	public void vehicleview() {
-		
+//		VehicleEntity V = (VehicleEntity) session.createQuery("SELECT a FROM VehicleEntity");
+//		String sql = "Select * FROM VehicleEntity";
+//		Query countQuery = session.createSQLQuery(sql);
+//		System.out.println(countQuery.list());
+//		System.out.println("Number of Employee: " + countQuery.list().get(0));
+//		Integer count = Integer.parseInt((String) countQuery.list().get(0));
+//		for(int i = 1;i<=count;i++) {
+//			
+//			VehicleEntity V = (VehicleEntity)session.get(VehicleEntity.class, i);
+//			System.out.println(V.toString());
+//			
+//		}
 	}
 }
 //test

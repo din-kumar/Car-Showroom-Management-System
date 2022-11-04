@@ -14,6 +14,11 @@ public class VehicleEntity {
 	private String brand;
 	private String model;
 	private double vehiclePrice;
+	@Override
+	public String toString() {
+		return "VehicleEntity [vehicleId=" + vehicleId + ", brand=" + brand + ", model=" + model + ", vehiclePrice="
+				+ vehiclePrice + ", vehicleStock=" + vehicleStock + "]";
+	}
 	private int vehicleStock;
 	public String getBrand() {
 		return brand;

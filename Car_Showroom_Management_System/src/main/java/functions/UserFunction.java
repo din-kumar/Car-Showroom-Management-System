@@ -113,10 +113,10 @@ public class UserFunction {
 		int k=-1;
 		while(k!=0) {
 			clrscr();
-			System.out.println("Input your option \n1.View Available Vehicle\0.Exit");
+			System.out.println("Input your option \n1.View Available Vehicle\n0.Exit");
 			k=sc.nextInt();
 			switch(k) {
-			case 1:V.vehicleview();
+			case 1:V.vehicleview();break;
 			default: System.out.println("Wrong Input Try again");break;
 			}
 	}
