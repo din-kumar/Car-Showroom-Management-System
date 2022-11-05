@@ -25,7 +25,7 @@ public class VehicleFunction {
     public void clrscr() {
     	System.out.println("-----------------------------------------------");
     }
-    
+    //vehicle list addition to databse by admin
     public void vehicleadd() {
         Session session = sf.openSession();
         Transaction transaction = session.beginTransaction();
@@ -62,7 +62,7 @@ public class VehicleFunction {
 
 		
 	}
-
+     // vehicle list view
 	public void vehicleview() {
         Session session = sf.openSession();
         Transaction transaction = session.beginTransaction();

@@ -24,7 +24,7 @@ public class UserFunction {
     {
         System.out.println("--------------------------------------");
     }
-    
+    // user registration
 	public void register()
 
 	{
@@ -65,7 +65,7 @@ public class UserFunction {
         	register();
         }
 	}
-	
+	//user login credential check
 	public void login()
 	{    Session session = sf.openSession();
     Transaction transaction = session.beginTransaction();
@@ -92,7 +92,7 @@ public class UserFunction {
 		
 		
 	}
-	
+	//admin panel
 	public void admin()
 	{
 		clrscr();
@@ -117,7 +117,7 @@ public class UserFunction {
 		else
 		System.out.println("username is incorrect");
 	}
-	
+	//user login view
 	public void home(UserEntity U)
 	{
 		clrscr();
@@ -134,7 +134,7 @@ public class UserFunction {
 			}
 	}
 	}
-	
+	//admin login view
 	public void adminhome()
 	{
 		clrscr();
@@ -154,6 +154,7 @@ public class UserFunction {
 		
 	}
 }
+	//User list only accessible to admin
 	public void userview() {
 		Session session = sf.openSession();
         Transaction transaction = session.beginTransaction();

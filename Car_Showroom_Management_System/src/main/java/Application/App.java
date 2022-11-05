@@ -20,7 +20,7 @@ public class App
 			case 2: U.login();break;
 			case 3: U.admin();break;
 			default: System.out.println("Wrong Input Try again");break;
-			//comment
+			
 
 			}
 		}
