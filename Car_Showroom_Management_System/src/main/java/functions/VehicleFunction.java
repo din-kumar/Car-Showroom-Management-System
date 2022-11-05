@@ -1,5 +1,6 @@
 package functions;
 
+import java.util.List;
 import java.util.Scanner;
 
 import org.hibernate.Query;
@@ -20,14 +21,15 @@ public class VehicleFunction {
 	Configuration con = new Configuration().configure().addAnnotatedClass(VehicleEntity.class);
     ServiceRegistry reg = new ServiceRegistryBuilder().applySettings(con.getProperties()).buildServiceRegistry(); 
     SessionFactory sf = con.buildSessionFactory(reg);
-    Session session = sf.openSession();
-    Transaction transaction = session.beginTransaction();
-	
+
     public void clrscr() {
     	System.out.println("-----------------------------------------------");
     }
     
     public void vehicleadd() {
+        Session session = sf.openSession();
+        Transaction transaction = session.beginTransaction();
+    	
     	
 		clrscr();
 		VehicleEntity V = new VehicleEntity();
@@ -56,31 +58,20 @@ public class VehicleFunction {
 		// Check here for the data that were Already stored in the database
 		session.save(V);
 		transaction.commit();
-		
-		System.out.println("add another vehicle ? \n1. Yes \n2.No");
-		int op;
-		op=sc.nextInt();
-		if(op==1)
-		{
-			vehicleadd();
-			
-		}
+		System.out.println("Saved Successfully");
+
 		
 	}
 
 	public void vehicleview() {
-//		VehicleEntity V = (VehicleEntity) session.createQuery("SELECT a FROM VehicleEntity");
-//		String sql = "Select * FROM VehicleEntity";
-//		Query countQuery = session.createSQLQuery(sql);
-//		System.out.println(countQuery.list());
-//		System.out.println("Number of Employee: " + countQuery.list().get(0));
-//		Integer count = Integer.parseInt((String) countQuery.list().get(0));
-//		for(int i = 1;i<=count;i++) {
-//			
-//			VehicleEntity V = (VehicleEntity)session.get(VehicleEntity.class, i);
-//			System.out.println(V.toString());
-//			
-//		}
+        Session session = sf.openSession();
+        Transaction transaction = session.beginTransaction();
+		Query q = session.createQuery("from VehicleEntity");
+		List<VehicleEntity> V=q.list();
+		System.out.println("Brand\t\tModel\t\tStock\t\tPrice");
+		System.out.println();
+		for(VehicleEntity ve: V) {
+			System.out.println(ve.getBrand()+"\t\t"+ve.getModel()+"\t\t"+ve.getVehicleStock()+"\t\t"+ve.getVehiclePrice());
+			}
 	}
 }
-//test

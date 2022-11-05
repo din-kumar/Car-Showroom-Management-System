@@ -11,7 +11,7 @@ public class UserEntity {
 	@Id
 	private String userName;
 	private String email;
-	private double phoneNo;
+	private long phoneNo;
 	private String homeAdd;
 	private String password;
 	
@@ -33,10 +33,13 @@ public class UserEntity {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public double getPhoneNo() {
+	
+	
+	
+	public long getPhoneNo() {
 		return phoneNo;
 	}
-	public void setPhoneNo(double phoneNo) {
+	public void setPhoneNo(long phoneNo) {
 		this.phoneNo = phoneNo;
 	}
 	public String getHomeAdd() {
