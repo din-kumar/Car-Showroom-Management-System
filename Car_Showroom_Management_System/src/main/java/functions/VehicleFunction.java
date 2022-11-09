@@ -13,6 +13,7 @@ import org.hibernate.service.ServiceRegistryBuilder;
 
 import Entity.UserEntity;
 import Entity.VehicleEntity;
+import Entity.WishlistEntity;
 
 public class VehicleFunction {
 
@@ -63,15 +64,66 @@ public class VehicleFunction {
 		
 	}
 
-	public void vehicleview() {
+	public void vehicleview(UserEntity U) {
+        Session session = sf.openSession();
+        int op;
+        WishlistFunction W = new WishlistFunction();
+        Transaction transaction = session.beginTransaction();
+		Query q = session.createQuery("from VehicleEntity");
+		List<VehicleEntity> V=q.list();
+		System.out.println("Id\t\t\tBrand\t\tModel\t\tStock\t\tPrice");
+		System.out.println();
+		for(VehicleEntity ve: V) {
+			System.out.println(ve.getVehicleId()+"\t\t"+ve.getBrand()+"\t\t"+ve.getModel()+"\t\t"+ve.getVehicleStock()+"\t\t"+ve.getVehiclePrice());
+			}
+		System.out.println("Would you like to wishlist any vehicle ?\n1. Yes\n2. No");
+		op=sc.nextInt();
+		if(op==1)
+		{System.out.println("Input the vehicle id");
+		int id = sc.nextInt();
+			W.wishlist(U,id);
+		}
+	}
+
+	public void vehicleviewadmin() {
+		// TODO Auto-generated method stub
         Session session = sf.openSession();
         Transaction transaction = session.beginTransaction();
 		Query q = session.createQuery("from VehicleEntity");
 		List<VehicleEntity> V=q.list();
-		System.out.println("Brand\t\tModel\t\tStock\t\tPrice");
+		System.out.println("Id\t\t\tBrand\t\tModel\t\tStock\t\tPrice");
 		System.out.println();
 		for(VehicleEntity ve: V) {
-			System.out.println(ve.getBrand()+"\t\t"+ve.getModel()+"\t\t"+ve.getVehicleStock()+"\t\t"+ve.getVehiclePrice());
+			System.out.println(ve.getVehicleId()+"\t\t"+ve.getBrand()+"\t\t"+ve.getModel()+"\t\t"+ve.getVehicleStock()+"\t\t"+ve.getVehiclePrice());
 			}
 	}
+	
+	public void viewdetails(int id)
+	{
+		Session session = sf.openSession();
+        Transaction transaction = session.beginTransaction();
+		try {
+			VehicleEntity ve = (VehicleEntity) session.get(VehicleEntity.class,id);
+			
+			System.out.println(ve.getVehicleId()+"\t\t"+ve.getBrand()+"\t\t"+ve.getModel()+"\t\t"+ve.getVehicleStock()+"\t\t"+ve.getVehiclePrice());
+			}
+			catch(Exception e){
+				System.out.println("Wrong id");
+			}
+	}
+	
+	public void viewdetailswithuser(int id,String username)
+	{
+		Session session = sf.openSession();
+        Transaction transaction = session.beginTransaction();
+		try {
+			VehicleEntity ve = (VehicleEntity) session.get(VehicleEntity.class,id);
+			
+			System.out.println(username+"\t\t"+ve.getVehicleId()+"\t\t"+ve.getBrand()+"\t\t"+ve.getModel()+"\t\t"+ve.getVehicleStock()+"\t\t"+ve.getVehiclePrice());
+			}
+			catch(Exception e){
+				System.out.println("Wrong id");
+			}
+	}
+	
 }

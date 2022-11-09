@@ -701,9 +701,8 @@ public class Layout {
 		
 		
 	}
-// ---------------------------- main method -----------------------	
-//	public static void main(String[] args) {
-//
-//		Layout first = new Layout();
-//	}
+	public static void main(String[] args) {
+
+		Layout first = new Layout();
+	}
 }

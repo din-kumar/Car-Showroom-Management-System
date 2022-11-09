@@ -68,26 +68,26 @@ public class UserFunction {
 	
 	public void login()
 	{    Session session = sf.openSession();
-    Transaction transaction = session.beginTransaction();
+    	Transaction transaction = session.beginTransaction();
 		
 		clrscr();
 		System.out.print("Input your username : ");
 		String username=sc.next();
-		System.out.print("Input your password : ");
-		String password=sc.next();
+//		System.out.print("Input your password : ");
+//		String password=sc.next();
 		//check userpass
-		try {
+//		try {
 		UserEntity U = (UserEntity) session.get(UserEntity.class,username);
-		if(password.equals(U.getPassword()))
-		{
+//		if(password.equals(U.getPassword()))
+//		{
 			home(U);
-		}
-		else
-			System.out.println("Wrong Password");
-		}
-		catch(Exception e){
-			System.out.println("Wrong username");
-		}
+//		}
+//		else
+//			System.out.println("Wrong Password");
+//		}
+//		catch(Exception e){
+//			System.out.println("Wrong username");
+//		}
 		//if is correct
 		
 		
@@ -122,14 +122,16 @@ public class UserFunction {
 	{
 		clrscr();
 		VehicleFunction V = new VehicleFunction();
+		WishlistFunction W= new WishlistFunction();
 		System.out.println("Hello "+U.getUserName());
 		int k=-1;
 		while(k!=0) {
 			clrscr();
-			System.out.println("Input your option \n1.View Available Vehicle\n0.Exit");
+			System.out.println("Input your option \n1.View Available Vehicle\n2.View my wishlist\n0.Exit");
 			k=sc.nextInt();
 			switch(k) {
-			case 1:V.vehicleview();break;
+			case 1:V.vehicleview(U);break;
+			case 2:System.out.println("Id\t\t\tBrand\t\tModel\t\tStock\t\tPrice");; W.mywishlist(U);break;
 			default:;break;
 			}
 	}
@@ -139,16 +141,18 @@ public class UserFunction {
 	{
 		clrscr();
 		VehicleFunction V = new VehicleFunction();
+		WishlistFunction W = new WishlistFunction();
 		System.out.println("Hello Admin");
 		int k=-1;
 		while(k!=0) {
 			clrscr();
-			System.out.println("Input your option \n1.Add Vehicle\n2.View Vehicle\n3.View Registered User\n0.Exit");
+			System.out.println("Input your option \n1.Add Vehicle\n2.View Vehicle\n3.View Registered User\n4.View Potential Sales\n0.Exit");
 			k=sc.nextInt();
 			switch(k) {
 			case 1:V.vehicleadd();break;
-			case 2:V.vehicleview();break;
+			case 2:V.vehicleviewadmin();break;
 			case 3:userview();break;
+			case 4:W.fullwishlist();break;
 			default:;break;
 			}
 		
