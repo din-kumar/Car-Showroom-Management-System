@@ -119,7 +119,7 @@ public class VehicleFunction {
 		try {
 			VehicleEntity ve = (VehicleEntity) session.get(VehicleEntity.class,id);
 			
-			System.out.println(username+"\t\t"+ve.getVehicleId()+"\t\t"+ve.getBrand()+"\t\t"+ve.getModel()+"\t\t"+ve.getVehicleStock()+"\t\t"+ve.getVehiclePrice());
+			System.out.println(username+"\t\t"+ve.getBrand()+"\t\t"+ve.getModel()+"\t\t"+ve.getVehicleStock()+"\t\t"+ve.getVehiclePrice());
 			}
 			catch(Exception e){
 				System.out.println("Wrong id");

@@ -1,14 +1,18 @@
 package Entity;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 
 public class WishlistEntity {
 
-private int vehicleId;
 @Id
+@GeneratedValue(strategy=GenerationType.AUTO)
+private int Id;
+private int vehicleId;
 private String username;
 public int getVehicleId() {
 	return vehicleId;
