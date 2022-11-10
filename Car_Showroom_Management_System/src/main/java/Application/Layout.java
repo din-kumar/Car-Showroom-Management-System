@@ -475,7 +475,7 @@ public void Admin_User() {
 		
 }
 		//mywishlist
-		public void mywishlist(UserEntity U) {
+	    public void mywishlist(UserEntity U) {
 			frame.removeAll();
 			Session session = sf.openSession();
 	        Transaction transaction = session.beginTransaction();
@@ -496,9 +496,9 @@ public void Admin_User() {
 			for(WishlistEntity we: W) {
 				if(U.getUserName().equals(we.getUsername()))
 				{
+					int b=we.getVehicleId();
 					
-					
-					VehicleEntity ve=(VehicleEntity) session.get(VehicleEntity.class, we.getVehicleId());
+					VehicleEntity ve=(VehicleEntity) session.get(VehicleEntity.class, b);
 					Label vid=new Label(""+ve.getVehicleId());
 					Label vbrand=new Label(ve.getBrand());
 					Label vmodel=new Label(ve.getModel());
@@ -507,12 +507,22 @@ public void Admin_User() {
 					vbrand.setBounds(130,x,100,30);
 					vmodel.setBounds(240,x,100,30);
 					vprice.setBounds(350,x,100,30);	
-				x+=40;
+				x+=60;
 				frame.add(vid);
 				frame.add(vbrand);
 				frame.add(vmodel);
 				frame.add(vprice);
 				}
+			
+			Label purchase = new Label("Enter Vid to Purchase ");
+			purchase.setBounds(20,x+40,150,30);
+			TextField input = new TextField();
+			input.setBounds(180,x+40,50,30);
+			Button ok = new Button("Ok");
+			ok.setBounds(250,x+40,100,30);
+			
+			Button back = new Button("Back");
+			back.setBounds(400,x+350, 100, 30);
 			
 			frame.add(display);
 			frame.add(id);
@@ -520,6 +530,23 @@ public void Admin_User() {
 			frame.add(model);
 			frame.add(price);
 			frame.setSize(800,x+400);
+			
+			// Button function
+			
+			ok.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					new dialog("You Want to Buy this Vehicle",Integer.parseInt(input.getText()));
+				}
+			});
+			
+			back.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					frame.removeAll();
+					User_Profile(U);
+				}
+			});
 			}
 				
 		}
@@ -938,7 +965,12 @@ public void Admin_User() {
 //Dialog
 
 class dialog {
-    private static Dialog d;  
+	Configuration con = new Configuration().configure().addAnnotatedClass(UserEntity.class).addAnnotatedClass(VehicleEntity.class).addAnnotatedClass(WishlistEntity.class);
+    ServiceRegistry reg = new ServiceRegistryBuilder().applySettings(con.getProperties()).buildServiceRegistry(); 
+    SessionFactory sf = con.buildSessionFactory(reg);
+    
+	
+	private static Dialog d;  
     dialog(String s) {  
         Frame frame= new Frame();  
         d = new Dialog(frame , "Successful", true);  
@@ -956,5 +988,47 @@ class dialog {
         d.setSize(300,300);    
         d.setVisible(true); 
         
-    }  
+    }
+    dialog(String s,int i){
+    	
+    	Frame frame = new Frame();
+    	d = new Dialog(frame , "Successful", true);  
+        d.setLayout( new FlowLayout() );  
+        Button b1 = new Button ("Buy");
+        Button b2 = new Button("Cancel");
+        b1.addActionListener ( new ActionListener()  
+        {  
+            public void actionPerformed( ActionEvent e )  
+            {  
+            	Session session = sf.openSession();
+    		    Transaction transaction = session.beginTransaction();
+                VehicleEntity ve=(VehicleEntity) session.get(VehicleEntity.class,i);
+                int var = ve.getVehicleStock();
+                if(var -1== -1) {
+                	new dialog("Sorry The item Is not in Stock");
+                }
+                else {                	
+                	ve.setVehicleStock(var-1);
+                	session.save(ve);
+                	transaction.commit();
+                	new dialog("Thanks for the purchase");
+                }
+                
+            }  
+        });  
+        b2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dialog.d.setVisible(false);
+				
+			}
+		});
+        
+        d.add( new Label (s));  
+        d.add(b1);   
+        d.add(b2);
+        d.setSize(300,300);    
+        d.setVisible(true); 
+        }
 }
