@@ -1,11 +1,6 @@
 package Application;
 
 import java.awt.*;
-import java.awt.Button;
-import java.awt.Choice;
-import java.awt.Frame;
-import java.awt.Label;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -19,6 +14,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
+
 
 import Entity.UserEntity;
 import Entity.VehicleEntity;
@@ -240,42 +236,47 @@ public class Layout {
 				if(temp1.equals(temp2)) {
 					for(UserEntity i:u ) {
 					if(temp1.equals(i.getUserName())) {
-						//username already exist
+						new dialog("Username already exist");
+						//NOt working
+						//
+						//
+						//
+						//
+						//
 					}
-					else
+					else {
 						U.setUserName(temp1);
+						temp1 = i_pass.getText();
+						temp2 = i_c_pass.getText();
+						if(temp1.equals(temp2)) {
+							U.setPassword(temp1);
+							session.save(U);
+							transaction.commit();
+							regpage();
+						}
+						else {
+							new dialog("Please enter same Password");
+						}
+					}
+					
 					}
 				}
 				else {
-					//User name mismatch
+					new dialog("Please enter same Username");
 				}
 				
-				temp1 = i_pass.getText();
-				temp2 = i_c_pass.getText();
-				if(temp1.equals(temp2)) {
-					U.setPassword(temp1);
-				}
-				else {
-					// password missmatch
-				}
+				
 //7482758245827525987298572875915987517578509149174987149879847198477164981749874398714987134908109847198749182740
 				// check alll the feilds completed and then submit save
-				session.save(U);
-				transaction.commit();
+				
 				
 				// go to regisered user page
-				frame.removeAll();
-				Label thank = new Label("Your Response Submitted Successfuly");
-				thank.setBounds(20, 40,	250, 30);
-				back.setBounds(140, 160, 80, 30);
 				
-							
-				frame.add(thank);
-				frame.add(back);
 				frame.setSize(500,300);
 			
 			}
 		});
+		
 				
 				back.addActionListener(new ActionListener() {
 
@@ -285,7 +286,24 @@ public class Layout {
 					}
 				});
 	}
+public void regpage() {
+	frame.removeAll();
+	Label thank = new Label("Your Response Submitted Successfuly");
+	final Button back = new Button("Back");
+	thank.setBounds(20, 40,	250, 30);
+	back.setBounds(140, 160, 80, 30);
+	
+				
+	frame.add(thank);
+	frame.add(back);
+	back.addActionListener(new ActionListener() {
 
+		public void actionPerformed(ActionEvent e) {
+			frame.removeAll();
+			Display_Window1();
+		}
+	});
+}
 // ----------------------- Third Part 2 Window -----------------------------------
 
 
@@ -569,6 +587,7 @@ public void Admin_User() {
 				public void actionPerformed(ActionEvent e) {
 					int vd=Integer.parseInt(t.getText());
 					wishlist(U,vd);
+					new dialog("Added Successfully");
 				}
 			});
 		}
@@ -668,6 +687,7 @@ public void Admin_User() {
 				session.save(V);
 				transaction.commit();
 				//added successfully
+				new dialog("Added Successfully");
 				
 			}
 
@@ -714,9 +734,35 @@ public void Admin_User() {
 			
 			
 	}
+	
+	
+	
 // ---------------------------- main method -----------------------	
 //	public static void main(String[] args) {
 //
 //		Layout layout = new Layout();
 //	}
+}
+//Dialog
+
+class dialog {
+    private static Dialog d;  
+    dialog(String s) {  
+        Frame frame= new Frame();  
+        d = new Dialog(frame , "Successful", true);  
+        d.setLayout( new FlowLayout() );  
+        Button b = new Button ("OK");  
+        b.addActionListener ( new ActionListener()  
+        {  
+            public void actionPerformed( ActionEvent e )  
+            {  
+                dialog.d.setVisible(false);  
+            }  
+        });  
+        d.add( new Label (s));  
+        d.add(b);   
+        d.setSize(300,300);    
+        d.setVisible(true); 
+        
+    }  
 }
