@@ -1,5 +1,6 @@
 package Application;
 
+import java.awt.*;
 import java.awt.Button;
 import java.awt.Choice;
 import java.awt.Frame;
@@ -9,7 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -18,11 +21,14 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
 import Entity.UserEntity;
+import Entity.VehicleEntity;
+import Entity.WishlistEntity;
+import functions.WishlistFunction;
 
 public class Layout {
 	
 // hibernate 
-	Configuration con = new Configuration().configure().addAnnotatedClass(UserEntity.class);
+	Configuration con = new Configuration().configure().addAnnotatedClass(UserEntity.class).addAnnotatedClass(VehicleEntity.class).addAnnotatedClass(WishlistEntity.class);
     ServiceRegistry reg = new ServiceRegistryBuilder().applySettings(con.getProperties()).buildServiceRegistry(); 
     SessionFactory sf = con.buildSessionFactory(reg);
     Session session = sf.openSession();
@@ -227,11 +233,19 @@ public class Layout {
 				
 				temp1 = i_u_id.getText();
 				temp2 = i_c_uid.getText();
+				Query q= session.createQuery("from UserEntity");
+				List<UserEntity> u = q.list();
 				if(temp1.equals(temp2)) {
-					U.setUserName(temp1);
+					for(UserEntity i:u ) {
+					if(temp1.equals(i.getUserName())) {
+						//username already exist
+					}
+					else
+						U.setUserName(temp1);
+					}
 				}
 				else {
-					// user name miss match
+					//User name mismatch
 				}
 				
 				temp1 = i_pass.getText();
@@ -281,10 +295,10 @@ public class Layout {
 		Label pass = new Label("Password");
 		pass.setBounds(20, 120, 100, 30);
 		
-		TextField i_u_id = new TextField();
+		final TextField i_u_id = new TextField();
 		i_u_id.setBounds(160, 80, 200, 30);
 		
-		TextField i_pass = new TextField();
+		final TextField i_pass = new TextField();
 		i_pass.setBounds(160, 120, 200, 30);
 		
 // ************************ Buttons *******************************************
@@ -306,7 +320,22 @@ public class Layout {
 		submit.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				// add data to the database(not done)
+				Query q=session.createQuery("from UserEntity");
+				List<UserEntity> u=q.list();
+				for(UserEntity i:u) {
+					if(i_u_id.getText().equals(i.getUserName())) {
+						if(i_pass.getText().equals(i.getPassword())) {
+							User_Profile(i);
+						}
+						else {
+							//wrong password
+						}
+							
+					}
+					else {
+						//wrong username
+					}
+				}
 		
 			
 			}
@@ -331,10 +360,10 @@ public void Admin_User() {
 		Label pass = new Label("Password");
 		pass.setBounds(20, 120, 100, 30);
 		
-		TextField i_u_id = new TextField();
+		final TextField i_u_id = new TextField();
 		i_u_id.setBounds(160, 80, 200, 30);
 		
-		TextField i_pass = new TextField();
+		final TextField i_pass = new TextField();
 		i_pass.setBounds(160, 120, 200, 30);
 		
 // ************************ Buttons *******************************************
@@ -356,7 +385,18 @@ public void Admin_User() {
 		submit.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				// add data to the database(not done)
+				if(i_u_id.getText().equals("admin")) {
+					if(i_pass.getText().equals("admin")) {
+						Admin_Profile();
+					}
+					else {
+						//wrong password
+					}
+						
+				}
+				else {
+					//wrong username
+				}
 				
 			
 			}
@@ -374,86 +414,168 @@ public void Admin_User() {
 
 
 // ----------------------- User Profile -----------------------------------
-		public void User_Profile(){
+		public void User_Profile(UserEntity U){
 		frame.removeAll();
 			
-		Label welcome = new Label("Welcome");
-		welcome.setBounds(100, 40, 100, 30);
+		Label welcome = new Label("Welcome  " + U.getUserName());
+		welcome.setBounds(100, 40, 200, 30);
+		
+		Label option = new Label("Select");
+		option.setBounds(20,80,100,30);
+		final Choice c=new Choice();
+		c.add("View Available Cars");
+		c.add("View Wishlist");
+		c.setBounds(140, 80, 150, 30);
+		Button submit=new Button("Submit");
+		submit.setBounds(300,80,100,30);
 			
-		Label u_id = new Label("User Id ");
-		u_id.setBounds(20,80,100,30);
-			
-		Label name = new Label("Name ");
-		name.setBounds(20,120,100,30);
-			
-		Label mobile = new Label("Mobile no. ");
-		mobile.setBounds(20,160,100,30);
-			
-// $$$$$$$$$$$$$$$$$$$$$$$ Fetch from data base $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$		
-		Label op_u_id = new Label(/*fetch from database */);
-		op_u_id.setBounds(140, 80, 100, 30);
-			
-		Label op_name = new Label();
-		op_name.setBounds(140,120,100,30);
-			
-		Label op_mobile = new Label();
-		op_mobile.setBounds(140,160,100,30);
-		// also describe other entities to add
+
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$		
-			
+		//Button function
+		submit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.removeAll();
+				if(c.getSelectedIndex()==0)
+				     vehicleview();
+				else {
+					//wishlistfunction
+				}
+			}
+		});
 		Logout();
 			
 		frame.add(welcome);
-		frame.add(u_id);
-		frame.add(name);
-		frame.add(mobile);
-		frame.add(op_u_id);
-		frame.add(op_name);
-		frame.add(op_mobile);
+		frame.add(c);
+		frame.add(option);
+		frame.add(submit);
+	
 			
-		frame.setSize(300,400);
+		frame.setSize(600,400);
 		
 }
+		//Vehicleview to user
+		public void vehicleview() {
+			frame.removeAll();
+			WishlistFunction W = new WishlistFunction();
+	        
+			Query q = session.createQuery("from VehicleEntity");
+			List<VehicleEntity> V=q.list();
+			Label display=new Label("List of Vehicles: ");
+			display.setBounds(100, 40, 200, 30);
+			int x=120;
+			Label id=new Label("V Id");
+			Label brand=new Label("Brand");
+			Label model=new Label("Model ");
+			Label price=new Label("Price");
+			Label wishlist=new Label("Enter VId to add vehicle to Wishlist");
+			TextField t=new TextField();
+			id.setBounds(20,80,100,30);
+			brand.setBounds(130,80,100,30);
+			model.setBounds(240,80,100,30);
+			price.setBounds(350,80,100,30);
+			
+			
+			
+			
+			for(VehicleEntity ve:V) {
+				Label vid=new Label(""+ve.getVehicleId());
+				Label vbrand=new Label(ve.getBrand());
+				Label vmodel=new Label(ve.getModel());
+				Label vprice=new Label(""+ve.getVehiclePrice());
+				vid.setBounds(20,x,100,30);
+				vbrand.setBounds(130,x,100,30);
+				vmodel.setBounds(240,x,100,30);
+				vprice.setBounds(350,x,100,30);	
+			x+=60;
+			frame.add(vid);
+			frame.add(vbrand);
+			frame.add(vmodel);
+			frame.add(vprice);
+			}
+			wishlist.setBounds(30,x+80,250,30);
+			t.setBounds(300,x+80,50,30);
+			Button submit=new Button("Submit");
+			submit.setBounds(360,x+80,100,30);
+			
+			
+			frame.add(display);
+			frame.add(id);
+			frame.add(brand);
+			frame.add(model);
+			frame.add(price);
+			frame.add(wishlist);
+			frame.add(t);
+			frame.add(submit);
+			frame.setSize(800,x+400);
+			
+			
+			//Button function
+			submit.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					int vd=Integer.parseInt(t.getText());
+					
+				}
+			});
+		}
+		
 // ----------------------- Admin Profile -----------------------------------
 	public void Admin_Profile(){
 		frame.removeAll();
 			
-		Label welcome = new Label("Welcome");
+		Label welcome = new Label("Welcome Admin");
 		welcome.setBounds(80, 40, 100, 30);
-			
-		Label u_id = new Label("User Id ");
-		u_id.setBounds(20,80,100,30);
-			
-		Label name = new Label("Name ");
-		name.setBounds(20,120,100,30);
-			
-		Label mobile = new Label("Mobile no. ");
-		mobile.setBounds(20,160,100,30);
 		
-// $$$$$$$$$$$$$$$$$$$$$$$ Fetch from data base $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$		
-		Label op_u_id = new Label(/*fetch from database */);
-		op_u_id.setBounds(140, 80, 100, 30);
+		Label option = new Label("Select");
+		option.setBounds(20,80,100,30);
+		final Choice c=new Choice();
+		c.add("Add Vehicle");
+		c.add("View Vehicle");
+		c.add("View Registered Users");
+		//c.add("View sales");
+		c.setBounds(140, 80, 150, 30);
+		Button submit=new Button("Submit");
+		submit.setBounds(300,80,100,30);
 			
-		Label op_name = new Label();
-		op_name.setBounds(140,120,100,30);
-			
-		Label op_mobile = new Label();
-		op_mobile.setBounds(140,160,100,30);
-			
+
+	
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$		
-			
+		//Button function
+				submit.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						frame.removeAll();
+						
+						switch(c.getSelectedIndex()) {
+						case 0 -> addvehicle();
+						case 1 -> viewvehicleadmin();
+						case 2 -> viewuser();
+						}
+					}
+
+				});	
 		Logout();
 			
 		frame.add(welcome);
-		frame.add(u_id);
-		frame.add(name);
-		frame.add(mobile);
-		frame.add(op_u_id);
-		frame.add(op_name);
-		frame.add(op_mobile);
-		
-		frame.setSize(300,400);
+		frame.add(option);
+		frame.add(submit);
+		frame.add(c);
+		frame.setSize(600,400);
 }
+	
+	//add vehicle
+	public void addvehicle() {
+		
+	}
+	
+	//vewvehicleadmin
+	public void viewvehicleadmin() {
+		
+	}
+	
+	//viewusers
+	public void viewuser() {
+		
+	}
+	
 // ------------------------------ Log out -------------------------------------
 	public void Logout(){
 		Button logout = new Button("Log Out");

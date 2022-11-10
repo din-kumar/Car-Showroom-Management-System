@@ -73,21 +73,21 @@ public class UserFunction {
 		clrscr();
 		System.out.print("Input your username : ");
 		String username=sc.next();
-//		System.out.print("Input your password : ");
-//		String password=sc.next();
+		System.out.print("Input your password : ");
+		String password=sc.next();
 		//check userpass
-//		try {
+		try {
 		UserEntity U = (UserEntity) session.get(UserEntity.class,username);
-//		if(password.equals(U.getPassword()))
-//		{
+		if(password.equals(U.getPassword()))
+		{
 			home(U);
-//		}
-//		else
-//			System.out.println("Wrong Password");
-//		}
-//		catch(Exception e){
-//			System.out.println("Wrong username");
-//		}
+		}
+		else
+			System.out.println("Wrong Password");
+		}
+		catch(Exception e){
+			System.out.println("Wrong username");
+		}
 		//if is correct
 		
 		
