@@ -251,7 +251,10 @@ public class Layout {
 						if(temp1.equals(temp2)) {
 							U.setPassword(temp1);
 							session.save(U);
-							transaction.commit();
+							if (!transaction.wasCommitted()){ 
+							    transaction.commit();
+							}
+							session.flush();
 							regpage();
 						}
 						else {
@@ -296,7 +299,7 @@ public void regpage() {
 
 		public void actionPerformed(ActionEvent e) {
 			frame.removeAll();
-			Display_Window1();
+			New_User();
 		}
 	});
 }
@@ -493,9 +496,9 @@ public void Admin_User() {
 			for(WishlistEntity we: W) {
 				if(U.getUserName().equals(we.getUsername()))
 				{
-					int b=we.getVehicleId();
 					
-					VehicleEntity ve=(VehicleEntity) session.get(VehicleEntity.class, b);
+					
+					VehicleEntity ve=(VehicleEntity) session.get(VehicleEntity.class, we.getVehicleId());
 					Label vid=new Label(""+ve.getVehicleId());
 					Label vbrand=new Label(ve.getBrand());
 					Label vmodel=new Label(ve.getModel());
@@ -504,7 +507,7 @@ public void Admin_User() {
 					vbrand.setBounds(130,x,100,30);
 					vmodel.setBounds(240,x,100,30);
 					vprice.setBounds(350,x,100,30);	
-				x+=60;
+				x+=40;
 				frame.add(vid);
 				frame.add(vbrand);
 				frame.add(vmodel);
@@ -565,6 +568,8 @@ public void Admin_User() {
 			t.setBounds(300,x+80,50,30);
 			Button submit=new Button("Submit");
 			submit.setBounds(360,x+80,100,30);
+			final Button back = new Button("Back");
+			back.setBounds(360, x+140, 100, 30);
 			
 			
 			frame.add(display);
@@ -575,6 +580,7 @@ public void Admin_User() {
 			frame.add(wishlist);
 			frame.add(t);
 			frame.add(submit);
+			frame.add(back);
 			frame.setSize(800,x+400);
 			
 			
@@ -584,6 +590,13 @@ public void Admin_User() {
 					int vd=Integer.parseInt(t.getText());
 					wishlist(U,vd);
 					new dialog("Added Successfully");
+				}
+			});
+			back.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					frame.removeAll();
+					User_Profile(U);
 				}
 			});
 		}
@@ -613,10 +626,10 @@ public void Admin_User() {
 		c.add("Add Vehicle");
 		c.add("View Vehicle");
 		c.add("View Registered Users");
-		//c.add("View sales");
-		c.setBounds(140, 80, 150, 30);
+		c.add("View Full Wishlist with User");
+		c.setBounds(140, 80, 200, 30);
 		Button submit=new Button("Submit");
-		submit.setBounds(300,80,100,30);
+		submit.setBounds(350,80,100,30);
 			
 
 	
@@ -630,6 +643,7 @@ public void Admin_User() {
 						case 0 -> addvehicle();
 						case 1 -> viewvehicleadmin();
 						case 2 -> viewuser();
+						case 3 -> Fullwishlist();
 						}
 					}
 
@@ -642,9 +656,76 @@ public void Admin_User() {
 		frame.add(c);
 		frame.setSize(600,400);
 }
+	//fullwishlisttoadmin
+	public void Fullwishlist() {
+		frame.removeAll();
+		Session session = sf.openSession();
+        Transaction transaction = session.beginTransaction();
+        Query q = session.createQuery("from WishlistEntity");
+        List<WishlistEntity> W=q.list();
+        Label display=new Label("List of Wishlisted Vehicles by Users: ");
+		display.setBounds(100, 40, 200, 30);
+		int x=120;
+		Label uname =new Label("Username");
+		Label id=new Label("V Id");
+		Label brand=new Label("Brand");
+		Label model=new Label("Model ");
+		Label price=new Label("Price");
+		uname.setBounds(20,80,100,30);
+		id.setBounds(130,80,100,30);
+		brand.setBounds(240,80,100,30);
+		model.setBounds(350,80,100,30);
+		price.setBounds(460,80,100,30);
+		final Button back = new Button("Back");
+		
+		frame.add(display);
+		frame.add(uname);
+		frame.add(id);
+		frame.add(brand);
+		frame.add(model);
+		frame.add(price);
+		
+		
+		for(WishlistEntity we:W) {
+			VehicleEntity ve = (VehicleEntity) session.get(VehicleEntity.class,we.getVehicleId());
+			Label name=new Label(we.getUsername());
+			Label vid=new Label(""+ve.getVehicleId());
+			Label vbrand=new Label(ve.getBrand());
+			Label vmodel=new Label(ve.getModel());
+			Label vprice=new Label(""+ve.getVehiclePrice());
+			name.setBounds(20,x,100,30);
+			vid.setBounds(130,x,100,30);
+			vbrand.setBounds(240,x,100,30);
+			vmodel.setBounds(350,x,100,30);
+			vprice.setBounds(460,x,100,30);	
+		x+=60;
+		frame.add(name);
+		frame.add(vid);
+		frame.add(vbrand);
+		frame.add(vmodel);
+		frame.add(vprice);
+		}
+		
+		
+		
+		back.setBounds(140, x+60, 80, 30);
+		frame.add(back);
+		frame.setSize(800,x+120);
+		back.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				frame.removeAll();
+				Admin_Profile();
+			}
+		});
+		
+        
+	}
+	
 	
 	//add vehicle
 	public void addvehicle() {
+		frame.removeAll();
 		Session session = sf.openSession();
         Transaction transaction = session.beginTransaction();
 		VehicleEntity V = new VehicleEntity();
@@ -669,6 +750,8 @@ public void Admin_User() {
 		stock.setBounds(150,200,200,30);
 		Button submit=new Button("Submit");
 		submit.setBounds(150,250,100,30);
+		final Button back = new Button("Back");
+		back.setBounds(300, 250, 100, 30);
 		
 		//Button function
 		submit.addActionListener(new ActionListener() {
@@ -688,6 +771,13 @@ public void Admin_User() {
 			}
 
 		});	
+		back.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				frame.removeAll();
+				Admin_Profile();
+			}
+		});
 		
 		frame.add(display);
 		frame.add(vbrand);
@@ -699,22 +789,123 @@ public void Admin_User() {
 		frame.add(vstock);
 		frame.add(stock);
 		frame.add(submit);
+		frame.add(back);
 		frame.setSize(800,600);
 		
 	}
 	
 	//viewvehicleadmin
 	public void viewvehicleadmin() {
+		frame.removeAll();
+		Session session = sf.openSession();
+	    Transaction transaction = session.beginTransaction();
+		frame.removeAll();
+		
+        
+		Query q = session.createQuery("from VehicleEntity");
+		List<VehicleEntity> V=q.list();
+		Label display=new Label("List of Vehicles: ");
+		display.setBounds(100, 40, 200, 30);
+		int x=120;
+		Label id=new Label("V Id");
+		Label brand=new Label("Brand");
+		Label model=new Label("Model ");
+		Label price=new Label("Price");
+		id.setBounds(20,80,100,30);
+		brand.setBounds(130,80,100,30);
+		model.setBounds(240,80,100,30);
+		price.setBounds(350,80,100,30);
+		
+		for(VehicleEntity ve:V) {
+			Label vid=new Label(""+ve.getVehicleId());
+			Label vbrand=new Label(ve.getBrand());
+			Label vmodel=new Label(ve.getModel());
+			Label vprice=new Label(""+ve.getVehiclePrice());
+			vid.setBounds(20,x,100,30);
+			vbrand.setBounds(130,x,100,30);
+			vmodel.setBounds(240,x,100,30);
+			vprice.setBounds(350,x,100,30);	
+		x+=60;
+		frame.add(vid);
+		frame.add(vbrand);
+		frame.add(vmodel);
+		frame.add(vprice);
+		}
+		final Button back = new Button("Back");
+		back.setBounds(140, x+60, 80, 30);
+		
+		
+		
+		frame.add(display);
+		frame.add(id);
+		frame.add(brand);
+		frame.add(model);
+		frame.add(price);
+		frame.add(back);
+		frame.setSize(800,x+120);
+		back.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				frame.removeAll();
+				Admin_Profile();
+			}
+		});
 		
 	}
 	
 	//viewusers
 	public void viewuser() {
+		frame.removeAll();
 		Session session = sf.openSession();
         Transaction transaction = session.beginTransaction();
         
         Query q=session.createQuery("from UserEntity");
         List<UserEntity> U = q.list();
+        Label display=new Label("List of Users: ");
+		display.setBounds(100, 40, 200, 30);
+		int x=120;
+		Label uname=new Label("Username");
+		Label email=new Label("Email");
+		Label add=new Label("Address");
+		Label phnum=new Label("Phone Number");
+		final Button back = new Button("Back");
+		uname.setBounds(20,80,100,30);
+		email.setBounds(130,80,100,30);
+		add.setBounds(240,80,100,30);
+		phnum.setBounds(350,80,100,30);
+		
+		
+		for(UserEntity ue:U) {
+			Label vid=new Label(ue.getUserName());
+			Label vbrand=new Label(ue.getEmail());
+			Label vmodel=new Label(ue.getHomeAdd());
+			Label vprice=new Label(""+ue.getPhoneNo());
+			vid.setBounds(20,x,100,30);
+			vbrand.setBounds(130,x,100,30);
+			vmodel.setBounds(240,x,100,30);
+			vprice.setBounds(350,x,100,30);	
+		x+=60;
+		frame.add(vid);
+		frame.add(vbrand);
+		frame.add(vmodel);
+		frame.add(vprice);
+		}
+		back.setBounds(140, x+40, 80, 30);
+		frame.add(display);
+		frame.add(uname);
+		frame.add(email);
+		frame.add(add);
+		frame.add(phnum);
+		frame.add(back);
+		frame.setSize(800,x+400);
+		back.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				frame.removeAll();
+				Admin_Profile();
+			}
+		});
+        
         
 	}
 	
