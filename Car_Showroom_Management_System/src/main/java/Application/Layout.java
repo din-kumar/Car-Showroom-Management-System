@@ -266,11 +266,7 @@ public class Layout {
 				}
 				
 				
-//7482758245827525987298572875915987517578509149174987149879847198477164981749874398714987134908109847198749182740
-				// check alll the feilds completed and then submit save
-				
-				
-				// go to regisered user page
+
 				
 				frame.setSize(500,300);
 			
