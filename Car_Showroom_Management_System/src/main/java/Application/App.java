@@ -6,6 +6,7 @@ public class App
 {
 	public static void main( String[] args )
     {    
+		Layout l= new Layout();
 		@SuppressWarnings("resource")
 		Scanner sc = new Scanner(System.in);
 		UserFunction U = new UserFunction();
