@@ -703,14 +703,19 @@ public void Admin_User() {
 		
 	}
 	
-	//vewvehicleadmin
+	//viewvehicleadmin
 	public void viewvehicleadmin() {
 		
 	}
 	
 	//viewusers
 	public void viewuser() {
-		
+		Session session = sf.openSession();
+        Transaction transaction = session.beginTransaction();
+        
+        Query q=session.createQuery("from UserEntity");
+        List<UserEntity> U = q.list();
+        
 	}
 	
 // ------------------------------ Log out -------------------------------------
