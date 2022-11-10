@@ -23,6 +23,7 @@ import org.hibernate.service.ServiceRegistryBuilder;
 import Entity.UserEntity;
 import Entity.VehicleEntity;
 import Entity.WishlistEntity;
+import functions.VehicleFunction;
 import functions.WishlistFunction;
 
 public class Layout {
@@ -31,8 +32,7 @@ public class Layout {
 	Configuration con = new Configuration().configure().addAnnotatedClass(UserEntity.class).addAnnotatedClass(VehicleEntity.class).addAnnotatedClass(WishlistEntity.class);
     ServiceRegistry reg = new ServiceRegistryBuilder().applySettings(con.getProperties()).buildServiceRegistry(); 
     SessionFactory sf = con.buildSessionFactory(reg);
-    Session session = sf.openSession();
-    Transaction transaction = session.beginTransaction();
+    
     
 	Frame frame;
 	
@@ -124,6 +124,8 @@ public class Layout {
 	}
 // --------------------------- Third Part-1 Window ------------------------------
 	public void New_User() {
+		Session session = sf.openSession();
+	    Transaction transaction = session.beginTransaction();
 // ******************* Labels ******************************************
 		Label fname = new Label("First Name - ");
 		fname.setBounds(20, 80, 120, 30);
@@ -288,6 +290,8 @@ public class Layout {
 
 
 	public void Registered_User() {
+		Session session = sf.openSession();
+	    Transaction transaction = session.beginTransaction();
 // ******************* Label ************************************
 		Label u_id = new Label("User Id");
 		u_id.setBounds(20, 80, 100, 30);
@@ -436,9 +440,9 @@ public void Admin_User() {
 			public void actionPerformed(ActionEvent e) {
 				frame.removeAll();
 				if(c.getSelectedIndex()==0)
-				     vehicleview();
+				     vehicleview(U);
 				else {
-					//wishlistfunction
+					mywishlist(U);
 				}
 			}
 		});
@@ -453,10 +457,61 @@ public void Admin_User() {
 		frame.setSize(600,400);
 		
 }
-		//Vehicleview to user
-		public void vehicleview() {
+		//mywishlist
+		public void mywishlist(UserEntity U) {
 			frame.removeAll();
-			WishlistFunction W = new WishlistFunction();
+			Session session = sf.openSession();
+	        Transaction transaction = session.beginTransaction();
+			Query q = session.createQuery("from WishlistEntity");
+			List<WishlistEntity> W=q.list();
+			
+			Label display=new Label("List of Wishlisted Vehicles: ");
+			display.setBounds(100, 40, 200, 30);
+			int x=120;
+			Label id=new Label("V Id");
+			Label brand=new Label("Brand");
+			Label model=new Label("Model ");
+			Label price=new Label("Price");
+			id.setBounds(20,80,100,30);
+			brand.setBounds(130,80,100,30);
+			model.setBounds(240,80,100,30);
+			price.setBounds(350,80,100,30);
+			for(WishlistEntity we: W) {
+				if(U.getUserName().equals(we.getUsername()))
+				{
+					int b=we.getVehicleId();
+					
+					VehicleEntity ve=(VehicleEntity) session.get(VehicleEntity.class, b);
+					Label vid=new Label(""+ve.getVehicleId());
+					Label vbrand=new Label(ve.getBrand());
+					Label vmodel=new Label(ve.getModel());
+					Label vprice=new Label(""+ve.getVehiclePrice());
+					vid.setBounds(20,x,100,30);
+					vbrand.setBounds(130,x,100,30);
+					vmodel.setBounds(240,x,100,30);
+					vprice.setBounds(350,x,100,30);	
+				x+=60;
+				frame.add(vid);
+				frame.add(vbrand);
+				frame.add(vmodel);
+				frame.add(vprice);
+				}
+			
+			frame.add(display);
+			frame.add(id);
+			frame.add(brand);
+			frame.add(model);
+			frame.add(price);
+			frame.setSize(800,x+400);
+			}
+				
+		}
+		//Vehicleview to user
+		public void vehicleview(UserEntity U) {
+			Session session = sf.openSession();
+		    Transaction transaction = session.beginTransaction();
+			frame.removeAll();
+			
 	        
 			Query q = session.createQuery("from VehicleEntity");
 			List<VehicleEntity> V=q.list();
@@ -513,9 +568,21 @@ public void Admin_User() {
 			submit.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int vd=Integer.parseInt(t.getText());
-					
+					wishlist(U,vd);
 				}
 			});
+		}
+		
+		
+		//Wishlist Function
+		public void wishlist(UserEntity u,int i) {
+			Session session = sf.openSession();
+		    Transaction transaction = session.beginTransaction();
+			WishlistEntity W = new WishlistEntity();
+			W.setUsername(u.getUserName());
+			W.setVehicleId(i);
+			session.save(W);
+	        transaction.commit();
 		}
 		
 // ----------------------- Admin Profile -----------------------------------
@@ -563,6 +630,60 @@ public void Admin_User() {
 	
 	//add vehicle
 	public void addvehicle() {
+		Session session = sf.openSession();
+        Transaction transaction = session.beginTransaction();
+		VehicleEntity V = new VehicleEntity();
+		
+		Label display=new Label("Add Vehicle Details ");
+		display.setBounds(100, 40, 200, 30);
+		Label vbrand=new Label(" Vehicle Brand :");
+		vbrand.setBounds(20,80,100,30);
+		TextField brand=new TextField();
+		brand.setBounds(150,80,200,30);
+		Label vmodel=new Label(" Vehicle Model :");
+		vmodel.setBounds(20,120,100,30);
+		TextField model=new TextField();
+		model.setBounds(150,120,200,30);
+		Label vprice=new Label(" Vehicle Price :");
+		vprice.setBounds(20,160,100,30);
+		TextField price=new TextField();
+		price.setBounds(150,160,200,30);
+		Label vstock=new Label(" No. of Vehicles :");
+		vstock.setBounds(20,200,100,30);
+		TextField stock=new TextField();
+		stock.setBounds(150,200,200,30);
+		Button submit=new Button("Submit");
+		submit.setBounds(150,250,100,30);
+		
+		//Button function
+		submit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VehicleEntity V=new VehicleEntity();
+				
+				V.setBrand(brand.getText());
+				V.setModel(model.getText());
+				V.setVehiclePrice(Double.parseDouble(price.getText()));
+				V.setVehicleStock(Integer.parseInt(stock.getText()));
+				
+				session.save(V);
+				transaction.commit();
+				//added successfully
+				
+			}
+
+		});	
+		
+		frame.add(display);
+		frame.add(vbrand);
+		frame.add(brand);
+		frame.add(vmodel);
+		frame.add(model);
+		frame.add(vprice);
+		frame.add(price);
+		frame.add(vstock);
+		frame.add(stock);
+		frame.add(submit);
+		frame.setSize(800,600);
 		
 	}
 	
