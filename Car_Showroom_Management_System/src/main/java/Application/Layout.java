@@ -15,7 +15,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
-
+import Entity.Sales;
 import Entity.UserEntity;
 import Entity.VehicleEntity;
 import Entity.WishlistEntity;
@@ -25,7 +25,7 @@ import functions.WishlistFunction;
 public class Layout {
 	
 // hibernate 
-	Configuration con = new Configuration().configure().addAnnotatedClass(UserEntity.class).addAnnotatedClass(VehicleEntity.class).addAnnotatedClass(WishlistEntity.class);
+	Configuration con = new Configuration().configure().addAnnotatedClass(UserEntity.class).addAnnotatedClass(VehicleEntity.class).addAnnotatedClass(WishlistEntity.class).addAnnotatedClass(Sales.class);
     ServiceRegistry reg = new ServiceRegistryBuilder().applySettings(con.getProperties()).buildServiceRegistry(); 
     SessionFactory sf = con.buildSessionFactory(reg);
     
@@ -523,7 +523,7 @@ public void Admin_User() {
 			ok.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					new dialog("You Want to Buy this Vehicle",Integer.parseInt(input.getText()));
+					new dialog("You Want to Buy this Vehicle",Integer.parseInt(input.getText()),U);
 				}
 			});
 			
@@ -643,6 +643,7 @@ public void Admin_User() {
 		c.add("View Vehicle");
 		c.add("View Registered Users");
 		c.add("View Full Wishlist with User");
+		c.add("Sales");
 		c.setBounds(140, 80, 200, 30);
 		Button submit=new Button("Submit");
 		submit.setBounds(350,80,100,30);
@@ -660,6 +661,7 @@ public void Admin_User() {
 						case 1 -> viewvehicleadmin();
 						case 2 -> viewuser();
 						case 3 -> Fullwishlist();
+						case 4 -> Sales();
 						}
 					}
 
@@ -672,6 +674,72 @@ public void Admin_User() {
 		frame.add(c);
 		frame.setSize(600,400);
 }
+	//Sales
+	public void Sales() {
+		frame.removeAll();
+		Session session = sf.openSession();
+        Transaction transaction = session.beginTransaction();
+        Query q = session.createQuery("from Sales");
+        List<Sales> S=q.list();
+        Label display=new Label("List of Vehicles Purchased by Users: ");
+		display.setBounds(100, 40, 200, 30);
+		int x=120;
+		Label uname =new Label("Username");
+		Label id=new Label("V Id");
+		Label brand=new Label("Brand");
+		Label model=new Label("Model ");
+		Label price=new Label("Price");
+		
+		uname.setBounds(20,80,100,30);
+		id.setBounds(130,80,100,30);
+		brand.setBounds(240,80,100,30);
+		model.setBounds(350,80,100,30);
+		price.setBounds(460,80,100,30);
+		final Button back = new Button("Back");
+		
+		frame.add(display);
+		frame.add(uname);
+		frame.add(id);
+		frame.add(brand);
+		frame.add(model);
+		frame.add(price);
+		
+		
+		for(Sales se:S) {
+			VehicleEntity ve = (VehicleEntity) session.get(VehicleEntity.class,se.getVehicleId());
+			Label name=new Label(se.getUsername());
+			Label vid=new Label(""+ve.getVehicleId());
+			Label vbrand=new Label(ve.getBrand());
+			Label vmodel=new Label(ve.getModel());
+			Label vprice=new Label(""+ve.getVehiclePrice());
+			name.setBounds(20,x,100,30);
+			vid.setBounds(130,x,100,30);
+			vbrand.setBounds(240,x,100,30);
+			vmodel.setBounds(350,x,100,30);
+			vprice.setBounds(460,x,100,30);	
+		x+=60;
+		frame.add(name);
+		frame.add(vid);
+		frame.add(vbrand);
+		frame.add(vmodel);
+		frame.add(vprice);
+		}
+		
+		
+		
+		back.setBounds(140, x+60, 80, 30);
+		frame.add(back);
+		frame.setSize(800,x+120);
+		back.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				frame.removeAll();
+				Admin_Profile();
+			}
+		});
+	}
+	
+	
 	//fullwishlisttoadmin
 	public void Fullwishlist() {
 		frame.removeAll();
@@ -959,7 +1027,7 @@ public void Admin_User() {
 //Dialog
 
 class dialog {
-	Configuration con = new Configuration().configure().addAnnotatedClass(UserEntity.class).addAnnotatedClass(VehicleEntity.class).addAnnotatedClass(WishlistEntity.class);
+	Configuration con = new Configuration().configure().addAnnotatedClass(UserEntity.class).addAnnotatedClass(VehicleEntity.class).addAnnotatedClass(WishlistEntity.class).addAnnotatedClass(Sales.class);
     ServiceRegistry reg = new ServiceRegistryBuilder().applySettings(con.getProperties()).buildServiceRegistry(); 
     SessionFactory sf = con.buildSessionFactory(reg);
     
@@ -983,7 +1051,7 @@ class dialog {
         d.setVisible(true); 
         
     }
-    dialog(String s,int i){
+    dialog(String s,int i,UserEntity U){
     	
     	Frame frame = new Frame();
     	d = new Dialog(frame , "Confirmation", true);  
@@ -1004,7 +1072,12 @@ class dialog {
                 }
                 else {                	
                 	ve.setVehicleStock(var-1);
+                	Sales s=new Sales();
+                	s.setVehicleId(i);
+                	s.setUsername(U.getUserName());
+                
                 	session.save(ve);
+                	session.save(s);
                 	transaction.commit();
                 	dialog.d.setVisible(false);
                 	new dialog("Thanks for the purchase");
