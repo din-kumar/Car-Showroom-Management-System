@@ -255,7 +255,7 @@ public class Layout {
 							    transaction.commit();
 							}
 							session.flush();
-							regpage();
+							
 						}
 						else {
 							new dialog("Please enter same Password");
@@ -268,7 +268,7 @@ public class Layout {
 					new dialog("Please enter same Username");
 				}
 				
-				
+				new dialog("Your Response has been Submitted Successfuly");
 
 				
 				frame.setSize(500,300);
@@ -285,24 +285,7 @@ public class Layout {
 					}
 				});
 	}
-public void regpage() {
-	frame.removeAll();
-	Label thank = new Label("Your Response Submitted Successfuly");
-	final Button back = new Button("Back");
-	thank.setBounds(20, 40,	250, 30);
-	back.setBounds(140, 160, 80, 30);
-	
-				
-	frame.add(thank);
-	frame.add(back);
-	back.addActionListener(new ActionListener() {
 
-		public void actionPerformed(ActionEvent e) {
-			frame.removeAll();
-			New_User();
-		}
-	});
-}
 // ----------------------- Third Part 2 Window -----------------------------------
 
 
@@ -513,7 +496,7 @@ public void Admin_User() {
 				frame.add(vmodel);
 				frame.add(vprice);
 				}
-			
+			}
 			Label purchase = new Label("Enter Vid to Purchase ");
 			purchase.setBounds(20,x+40,150,30);
 			TextField input = new TextField();
@@ -529,6 +512,10 @@ public void Admin_User() {
 			frame.add(brand);
 			frame.add(model);
 			frame.add(price);
+			frame.add(purchase);
+			frame.add(input);
+			frame.add(ok);
+			frame.add(back);
 			frame.setSize(800,x+400);
 			
 			// Button function
@@ -547,7 +534,7 @@ public void Admin_User() {
 					User_Profile(U);
 				}
 			});
-			}
+			
 				
 		}
 		//Vehicleview to user
@@ -577,6 +564,7 @@ public void Admin_User() {
 			
 			
 			for(VehicleEntity ve:V) {
+				if(ve.getVehicleStock()>0) {
 				Label vid=new Label(""+ve.getVehicleId());
 				Label vbrand=new Label(ve.getBrand());
 				Label vmodel=new Label(ve.getModel());
@@ -590,6 +578,7 @@ public void Admin_User() {
 			frame.add(vbrand);
 			frame.add(vmodel);
 			frame.add(vprice);
+				}
 			}
 			wishlist.setBounds(30,x+80,250,30);
 			t.setBounds(300,x+80,50,30);
@@ -838,25 +827,29 @@ public void Admin_User() {
 		Label brand=new Label("Brand");
 		Label model=new Label("Model ");
 		Label price=new Label("Price");
+		Label stock=new Label("Stock");
 		id.setBounds(20,80,100,30);
 		brand.setBounds(130,80,100,30);
 		model.setBounds(240,80,100,30);
 		price.setBounds(350,80,100,30);
-		
+		stock.setBounds(460,80,100,30);
 		for(VehicleEntity ve:V) {
 			Label vid=new Label(""+ve.getVehicleId());
 			Label vbrand=new Label(ve.getBrand());
 			Label vmodel=new Label(ve.getModel());
 			Label vprice=new Label(""+ve.getVehiclePrice());
+			Label vstock=new Label(""+ve.getVehicleStock());
 			vid.setBounds(20,x,100,30);
 			vbrand.setBounds(130,x,100,30);
 			vmodel.setBounds(240,x,100,30);
 			vprice.setBounds(350,x,100,30);	
+			vstock.setBounds(460,x,100,30);
 		x+=60;
 		frame.add(vid);
 		frame.add(vbrand);
 		frame.add(vmodel);
 		frame.add(vprice);
+		frame.add(vstock);
 		}
 		final Button back = new Button("Back");
 		back.setBounds(140, x+60, 80, 30);
@@ -868,6 +861,7 @@ public void Admin_User() {
 		frame.add(brand);
 		frame.add(model);
 		frame.add(price);
+		frame.add(stock);
 		frame.add(back);
 		frame.setSize(800,x+120);
 		back.addActionListener(new ActionListener() {
@@ -992,7 +986,7 @@ class dialog {
     dialog(String s,int i){
     	
     	Frame frame = new Frame();
-    	d = new Dialog(frame , "Successful", true);  
+    	d = new Dialog(frame , "Confirmation", true);  
         d.setLayout( new FlowLayout() );  
         Button b1 = new Button ("Buy");
         Button b2 = new Button("Cancel");
@@ -1005,15 +999,19 @@ class dialog {
                 VehicleEntity ve=(VehicleEntity) session.get(VehicleEntity.class,i);
                 int var = ve.getVehicleStock();
                 if(var -1== -1) {
+                	dialog.d.setVisible(false);
                 	new dialog("Sorry The item Is not in Stock");
                 }
                 else {                	
                 	ve.setVehicleStock(var-1);
                 	session.save(ve);
                 	transaction.commit();
+                	dialog.d.setVisible(false);
                 	new dialog("Thanks for the purchase");
+                	
                 }
-                
+               
+               
             }  
         });  
         b2.addActionListener(new ActionListener() {
@@ -1022,6 +1020,7 @@ class dialog {
 			public void actionPerformed(ActionEvent e) {
 				dialog.d.setVisible(false);
 				
+	               
 			}
 		});
         
